@@ -5,6 +5,7 @@
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="https://codemirror.net/lib/codemirror.css">
     <script src="https://codemirror.net/lib/codemirror.js"></script>
+    <script src="https://rawgit.com/j-pel/dynamize/master/moving.js"></script>
     <script src="https://codemirror.net/addon/edit/matchbrackets.js"></script>
     <script src="https://codemirror.net/addon/comment/comment.js"></script>
     <script src="https://codemirror.net/mode/javascript/javascript.js"></script>
@@ -13,10 +14,112 @@
         width: 100%;
         height: 100%;
       }
+      .float {
+        display: block;
+        position: absolute;
+        width: 430px;
+        height: 130px;
+        top: 200px;
+        left: 60px;
+        border: 1px solid black;
+        background-color: #ccc;
+        z-index: 99;
+      }
+      .key {
+        display: inline-block;
+        text-align: center;
+        width: 24px;
+        height: 24px;
+        border: 1px solid black;
+        cursor: pointer;
+      }
+      .key:hover {
+        background-color: #cff;
+      }
     </style>
   </head>
   <body>
+    <div id=keyboard class="float movable">
+      <span class=key>\</span>
+      <span class=key>1</span>
+      <span class=key>2</span>
+      <span class=key>3</span>
+      <span class=key>4</span>
+      <span class=key>5</span>
+      <span class=key>6</span>
+      <span class=key>7</span>
+      <span class=key>8</span>
+      <span class=key>9</span>
+      <span class=key>0</span>
+      <span class=key>-</span>
+      <span class=key>=</span>
+      <span class=key style="width: 38px;">&larr;</span>
+      <br />
+      <span class=key style="width: 38px;">tab</span>
+      <span class=key>q</span>
+      <span class=key>w</span>
+      <span class=key>e</span>
+      <span class=key>r</span>
+      <span class=key>t</span>
+      <span class=key>y</span>
+      <span class=key>u</span>
+      <span class=key>i</span>
+      <span class=key>o</span>
+      <span class=key>p</span>
+      <span class=key>+</span>
+      <span class=key>{</span>
+      <span class=key>}</span>
+      <br />
+      <span class=key style="width: 54px;">caps</span>
+      <span class=key>a</span>
+      <span class=key>s</span>
+      <span class=key>d</span>
+      <span class=key>f</span>
+      <span class=key>g</span>
+      <span class=key>h</span>
+      <span class=key>j</span>
+      <span class=key>k</span>
+      <span class=key>l</span>
+      <span class=key>[</span>
+      <span class=key>]</span>
+      <span class=key style="width: 38px;">enter</span>
+      <br />
+      <span class=key style="width: 38px;">ctrl</span>
+      <span class=key>&lt;</span>
+      <span class=key>z</span>
+      <span class=key>x</span>
+      <span class=key>c</span>
+      <span class=key>v</span>
+      <span class=key>b</span>
+      <span class=key>n</span>
+      <span class=key>m</span>
+      <span class=key>,</span>
+      <span class=key>.</span>
+      <span class=key>/</span>
+      <span class=key>?</span>
+      <span class=key>_</span>
+      <br />
+      <span class=key>o</span>
+      <span class=key>&gt;</span>
+      <span class=key>(</span>
+      <span class=key>)</span>
+      <span class=key>@</span>
+      <span class=key style="width: 112px;">spc</span>
+      <span class=key>;</span>
+      <span class=key>:</span>
+      <span class=key>'</span>
+      <span class=key>"</span>
+      <span class=key>~</span>
+    </div>
     <script>
+      
+      'use strict';
+
+      moving.init(function(){});
+      var elementList = document.getElementsByClassName('key');
+      for (var i = 0; i < elementList.length; i++) {
+        elementList[i].addEventListener("click",handleVkey, false);
+      }
       document.addEventListener("keydown", handleKeyDown, false);
       var editor = CodeMirror(document.body, {
         lineNumbers: true,
@@ -33,25 +136,54 @@
       editor.setCursor(4,0);
       editor.focus();
 
+      function handleVkey(event) {
+        var chr = event.srcElement.innerText;
+        var cur = editor.getCursor();
+        switch(chr) {
+        case "caps":
+          break;
+        case "enter":
+          editor.replaceRange("\n",cur);
+          break;
+        case "ctrl":
+          break;
+        case "←":
+          editor.execCommand("delCharBefore");
+          break;
+        case "tab":
+          editor.replaceRange("\t",cur);
+          break;
+        case "spc":
+          editor.replaceRange(" ",cur);
+          break;
+        default:
+          editor.replaceRange(chr,cur);
+          break;
+        }
+      }
+
       function handleKeyDown(event){
         switch(event.keyCode) {
-          case 32:  // Space
-            if (event.ctrlKey) {
-              console.log("command");
-              event.keyCode = 48;
-            }
-          case 38:  // Up
-          case 40:  // Down
-            break;
-          case 33:  // PgUp
-          case 37:  // Left
-            break;
-          case 34:  // PgDown
-          case 39:  // Right
-            break;
-          default:
-            console.log(event);
-            break;
+        case 32:  // Space
+          if (event.ctrlKey) {
+            console.log("command");
+            event.keyCode = 48;
+          }
+        case 38:  // Up
+        case 40:  // Down
+          break;
+        case 33:  // PgUp
+        case 37:  // Left
+          break;
+        case 34:  // PgDown
+        case 39:  // Right
+          break;
+        default:
+          //var cur = editor.getCursor();
+          //console.log(event.keyCode);
+          //editor.replaceRange(String.fromCodePoint(event.keyCode),cur);
+          //console.log(event);
+          break;
         }
       }
 
