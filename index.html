@@ -3,14 +3,17 @@
   <head>
     <title>NewCode: a new way to code</title>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" href="https://codemirror.net/lib/codemirror.css">
-    <script src="https://codemirror.net/lib/codemirror.js"></script>
-    <script src="https://rawgit.com/j-pel/dynamize/master/moving.js"></script>
+    <!--link rel="stylesheet" href="https://codemirror.net/lib/codemirror.css">
     <script src="https://codemirror.net/addon/edit/matchbrackets.js"></script>
     <script src="https://codemirror.net/addon/comment/comment.js"></script>
     <script src="https://codemirror.net/mode/javascript/javascript.js"></script>
+    <script src="https://codemirror.net/lib/codemirror.js"></script-->
+    <script src="https://rawgit.com/j-pel/dynamize/master/moving.js"></script>
     <style type="text/css">
-      .CodeMirror {
+      .editor {
+        font-family: terminal, "Lucida Console";
+        font-size: 10pt;
+        border: 1px solid black;
         width: 100%;
         height: 100%;
       }
@@ -39,7 +42,9 @@
     </style>
   </head>
   <body>
+  <div class=editor>/* Empty */</div>
     <div id=keyboard class="float movable">
+      <nobr>
       <span class=key>\</span>
       <span class=key>1</span>
       <span class=key>2</span>
@@ -54,7 +59,7 @@
       <span class=key>-</span>
       <span class=key>=</span>
       <span class=key style="width: 38px;">&larr;</span>
-      <br />
+      </nobr><br /><nobr>
       <span class=key style="width: 38px;">tab</span>
       <span class=key>q</span>
       <span class=key>w</span>
@@ -69,7 +74,7 @@
       <span class=key>+</span>
       <span class=key>{</span>
       <span class=key>}</span>
-      <br />
+      </nobr><br /><nobr>
       <span class=key style="width: 54px;">caps</span>
       <span class=key>a</span>
       <span class=key>s</span>
@@ -83,7 +88,7 @@
       <span class=key>[</span>
       <span class=key>]</span>
       <span class=key style="width: 38px;">enter</span>
-      <br />
+      </nobr><br /><nobr>
       <span class=key style="width: 38px;">ctrl</span>
       <span class=key>&lt;</span>
       <span class=key>z</span>
@@ -98,7 +103,7 @@
       <span class=key>/</span>
       <span class=key>?</span>
       <span class=key>_</span>
-      <br />
+      </nobr><br /><nobr>
       <span class=key>o</span>
       <span class=key>&gt;</span>
       <span class=key>(</span>
@@ -110,82 +115,95 @@
       <span class=key>'</span>
       <span class=key>"</span>
       <span class=key>~</span>
+      </nobr>
     </div>
     <script>
       
-      'use strict';
+'use strict';
 
-      moving.init(function(){});
-      var elementList = document.getElementsByClassName('key');
-      for (var i = 0; i < elementList.length; i++) {
-        elementList[i].addEventListener("click",handleVkey, false);
-      }
-      document.addEventListener("keydown", handleKeyDown, false);
-      var editor = CodeMirror(document.body, {
-        lineNumbers: true,
-        matchBrackets: true,
-        continueComments: "Enter",
-        extraKeys: {"Ctrl-Q": "toggleComment"}
-      });
-      editor.setValue(
-"/* NewCode is a minimalist but full featured online editor\n\
- * whose main goal is to ease coding on touch devices\n\
- * To show available commands, press ctrl-spc\n\
- *                                                          */\n\
+(function(exports) {
+  var canvas = null;
+
+  var init = exports.init = function(obj) {
+    canvas = obj;
+  }
+  var setValue = exports.setValue = function(str) {
+    canvas.innerText = str;
+  }
+  var setCursor = exports.setCursor = function(str) {
+    canvas.innerText = str;
+  }
+  var focus = exports.focus = function() {
+    //canvas.focus();
+  }
+})(typeof exports === 'undefined'? this['editor']={}: exports);
+
+moving.init(function(){});
+editor.init(document.getElementsByClassName("editor"));
+var elementList = document.getElementsByClassName('key');
+for (var i = 0; i < elementList.length; i++) {
+  elementList[i].addEventListener("click",handleVkey, false);
+}
+document.addEventListener("keydown", handleKeyDown, false);
+editor.setValue("\
+/* NewCode is a minimalist but full featured online editor\n\
+* whose main goal is to ease coding on touch devices\n\
+* To show available commands, press ctrl-spc\n\
+*                                                          */\n\
 ");
-      editor.setCursor(4,0);
-      editor.focus();
+editor.setCursor(4,0);
+editor.focus();
 
-      function handleVkey(event) {
-        var chr = event.srcElement.innerText;
-        var cur = editor.getCursor();
-        switch(chr) {
-        case "caps":
-          break;
-        case "enter":
-          editor.replaceRange("\n",cur);
-          break;
-        case "ctrl":
-          break;
-        case "←":
-          editor.execCommand("delCharBefore");
-          break;
-        case "tab":
-          editor.replaceRange("\t",cur);
-          break;
-        case "spc":
-          editor.replaceRange(" ",cur);
-          break;
-        default:
-          editor.replaceRange(chr,cur);
-          break;
-        }
-      }
+function handleVkey(event) {
+  var chr = event.srcElement.innerText;
+  var cur = editor.getCursor();
+  switch(chr) {
+  case "caps":
+    break;
+  case "enter":
+    editor.replaceRange("\n",cur);
+    break;
+  case "ctrl":
+    break;
+  case "←":
+    editor.execCommand("delCharBefore");
+    break;
+  case "tab":
+    editor.replaceRange("\t",cur);
+    break;
+  case "spc":
+    editor.replaceRange(" ",cur);
+    break;
+  default:
+    editor.replaceRange(chr,cur);
+    break;
+  }
+}
 
-      function handleKeyDown(event){
-        switch(event.keyCode) {
-        case 32:  // Space
-          if (event.ctrlKey) {
-            console.log("command");
-            event.keyCode = 48;
-          }
-        case 38:  // Up
-        case 40:  // Down
-          break;
-        case 33:  // PgUp
-        case 37:  // Left
-          break;
-        case 34:  // PgDown
-        case 39:  // Right
-          break;
-        default:
-          //var cur = editor.getCursor();
-          //console.log(event.keyCode);
-          //editor.replaceRange(String.fromCodePoint(event.keyCode),cur);
-          //console.log(event);
-          break;
-        }
-      }
+function handleKeyDown(event){
+  switch(event.keyCode) {
+  case 32:  // Space
+    if (event.ctrlKey) {
+      console.log("command");
+      event.keyCode = 48;
+    }
+  case 38:  // Up
+  case 40:  // Down
+    break;
+  case 33:  // PgUp
+  case 37:  // Left
+    break;
+  case 34:  // PgDown
+  case 39:  // Right
+    break;
+  default:
+    //var cur = editor.getCursor();
+    //console.log(event.keyCode);
+    //editor.replaceRange(String.fromCodePoint(event.keyCode),cur);
+    //console.log(event);
+    break;
+  }
+}
 
     </script>
   </body>
