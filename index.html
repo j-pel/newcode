@@ -11,9 +11,10 @@
     <script src="https://rawgit.com/j-pel/dynamize/master/moving.js"></script>
     <style type="text/css">
       .editor {
+        position: fixed;
+        overflow: auto;
         font-family: terminal, "Lucida Console";
-        font-size: 10pt;
-        border: 1px solid black;
+        font-size: 9pt;
         width: 100%;
         height: 100%;
       }
@@ -122,7 +123,9 @@
 'use strict';
 
 (function(exports) {
-  var canvas = null;
+  var canvas = new Object();
+  var head = [0,0];
+  var tail = [0,0];
 
   var init = exports.init = function(obj) {
     canvas = obj;
@@ -130,8 +133,22 @@
   var setValue = exports.setValue = function(str) {
     canvas.innerText = str;
   }
-  var setCursor = exports.setCursor = function(str) {
-    canvas.innerText = str;
+  var getCursor = exports.getCursor = function() {
+    return head;
+  }
+  var setCursor = exports.setCursor = function(line,char) {
+    head = [line,char];
+  }
+  var replaceRange = exports.replaceRange = function(str, cur) {
+    canvas.innerText += str;
+  }
+  var execCommand = exports.execCommand = function(cmd) {
+    switch (cmd) {
+    case "delCharBefore":
+      break;
+    default:
+      break;
+    }
   }
   var focus = exports.focus = function() {
     //canvas.focus();
@@ -139,7 +156,7 @@
 })(typeof exports === 'undefined'? this['editor']={}: exports);
 
 moving.init(function(){});
-editor.init(document.getElementsByClassName("editor"));
+editor.init(document.getElementsByClassName("editor")[0]);
 var elementList = document.getElementsByClassName('key');
 for (var i = 0; i < elementList.length; i++) {
   elementList[i].addEventListener("click",handleVkey, false);
@@ -155,52 +172,70 @@ editor.setCursor(4,0);
 editor.focus();
 
 function handleVkey(event) {
-  var chr = event.srcElement.innerText;
+  var target = event.target || event.srcElement;
+  keyPress(target.innerText);
+}
+
+function handleKeyDown(event){
+  if (event.ctrlKey) {
+    switch(event.keyCode) {
+    case 32:
+      console.log("command");
+      break;
+    }
+  } else {
+    keyPress(event.key);
+  }
+}
+
+function keyPress(key) {
   var cur = editor.getCursor();
-  switch(chr) {
+  switch(key) {
   case "caps":
     break;
   case "enter":
+  case "Enter":
     editor.replaceRange("\n",cur);
     break;
-  case "ctrl":
-    break;
   case "←":
+  case "Backspace":
     editor.execCommand("delCharBefore");
     break;
   case "tab":
+  case "Tab":
     editor.replaceRange("\t",cur);
+    break;
+  case "Enter":
+    editor.replaceRange("\n",cur);
+    break;
+  case "caps":
+  case "Shift":
+  case "ctrl":
+  case "Control":
+  case "alt":
+  case "Alt":
     break;
   case "spc":
     editor.replaceRange(" ",cur);
     break;
-  default:
-    editor.replaceRange(chr,cur);
+  case "ArrowUp":
+  case "ArrowDown":
+  case "ArrowLeft":
+  case "ArrowRight":
     break;
-  }
-}
-
-function handleKeyDown(event){
-  switch(event.keyCode) {
-  case 32:  // Space
-    if (event.ctrlKey) {
-      console.log("command");
-      event.keyCode = 48;
-    }
-  case 38:  // Up
-  case 40:  // Down
+  case "PageUp":
+  case "PageDown":
     break;
-  case 33:  // PgUp
-  case 37:  // Left
+  case "Insert":
+  case "Delete":
+  case "Home":
+  case "End":
     break;
-  case 34:  // PgDown
-  case 39:  // Right
+  case "OS": 
+  case "ContextMenu": 
     break;
   default:
-    //var cur = editor.getCursor();
-    //console.log(event.keyCode);
-    //editor.replaceRange(String.fromCodePoint(event.keyCode),cur);
-    //console.log(event);
+    editor.replaceRange(key,cur);
     break;
   }
 }
