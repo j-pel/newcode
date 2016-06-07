@@ -3,20 +3,23 @@
   <head>
     <title>NewCode: a new way to code</title>
     <meta charset="utf-8"/>
-    <!--link rel="stylesheet" href="https://codemirror.net/lib/codemirror.css">
-    <script src="https://codemirror.net/addon/edit/matchbrackets.js"></script>
-    <script src="https://codemirror.net/addon/comment/comment.js"></script>
-    <script src="https://codemirror.net/mode/javascript/javascript.js"></script>
-    <script src="https://codemirror.net/lib/codemirror.js"></script-->
-    <script src="https://rawgit.com/j-pel/dynamize/master/moving.js"></script>
     <style type="text/css">
       .editor {
         position: fixed;
         overflow: auto;
         font-family: terminal, "Lucida Console";
         font-size: 9pt;
-        width: 100%;
-        height: 100%;
+        width: 99%;
+        height: 98%;
+      }
+      .editor .statusbar {
+        position: fixed;
+        font-size: 8pt;
+        height: 8pt;
+        width: 99%;
+        border-top: 1px solid #aaa;
+        background-color: #ddd;
+        bottom: 0rem;                
       }
       .float {
         display: block;
@@ -57,7 +60,7 @@
     </style>
   </head>
   <body>
-  <div class=editor>/* Empty */</div>
+  <div class=editor></div>
     <div id=keyboard class="float movable">
       <nobr>
       <span class=key>\</span>
@@ -206,42 +209,9 @@
       <span class=key>"</span>
       </nobr>
     </div>
+    <script src="https://rawgit.com/j-pel/dynamize/master/moving.js"></script>
+    <script src="editor.js"></script>
     <script>
-      
-'use strict';
-
-(function(exports) {
-  var canvas = new Object();
-  var head = [0,0];
-  var tail = [0,0];
-
-  var init = exports.init = function(obj) {
-    canvas = obj;
-  }
-  var setValue = exports.setValue = function(str) {
-    canvas.innerText = str;
-  }
-  var getCursor = exports.getCursor = function() {
-    return head;
-  }
-  var setCursor = exports.setCursor = function(line,char) {
-    head = [line,char];
-  }
-  var replaceRange = exports.replaceRange = function(str, cur) {
-    canvas.innerText += str;
-  }
-  var execCommand = exports.execCommand = function(cmd) {
-    switch (cmd) {
-    case "delCharBefore":
-      break;
-    default:
-      break;
-    }
-  }
-  var focus = exports.focus = function() {
-    //canvas.focus();
-  }
-})(typeof exports === 'undefined'? this['editor']={}: exports);
 
 moving.init(function(){});
 editor.init(document.getElementsByClassName("editor")[0]);
@@ -312,6 +282,7 @@ function keyPress(key) {
   case "Enter":
     editor.replaceRange("\n",cur);
     break;
+  case "Dead":
   case "caps":
   case "Shift":
   case "ctrl":
@@ -320,7 +291,7 @@ function keyPress(key) {
   case "Alt":
     break;
   case "spc":
-    editor.replaceRange(" ",cur);
+    editor.replaceRange("\u00A0",cur);
     break;
   case "ArrowUp":
   case "ArrowDown":
