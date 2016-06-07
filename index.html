@@ -21,8 +21,8 @@
       .float {
         display: block;
         position: absolute;
-        width: 430px;
-        height: 130px;
+        width: 33.5rem;
+        height: 10.6rem;
         top: 200px;
         left: 60px;
         border: 1px solid black;
@@ -32,13 +32,27 @@
       .key {
         display: inline-block;
         text-align: center;
-        width: 24px;
-        height: 24px;
+        width: 2rem;
+        height: 2rem;
+        font-size: 1.5rem;
         border: 1px solid black;
         cursor: pointer;
       }
       .key:hover {
         background-color: #cff;
+      }
+      .keypress {
+        display: inline-block;
+        text-align: center;
+        width: 2rem;
+        height: 2rem;
+        font-size: 1.5rem;
+        border: 1px solid black;
+        cursor: pointer;
+        background-color: #cff;
+      }
+      #capskeys {
+        display: none;
       }
     </style>
   </head>
@@ -57,11 +71,11 @@
       <span class=key>8</span>
       <span class=key>9</span>
       <span class=key>0</span>
-      <span class=key>-</span>
+      <span class=key>?</span>
       <span class=key>=</span>
-      <span class=key style="width: 38px;">&larr;</span>
+      <span class=key style="width: 2.5rem;">&larr;</span>
       </nobr><br /><nobr>
-      <span class=key style="width: 38px;">tab</span>
+      <span class=key style="width: 2.5rem;">tab</span>
       <span class=key>q</span>
       <span class=key>w</span>
       <span class=key>e</span>
@@ -76,7 +90,7 @@
       <span class=key>{</span>
       <span class=key>}</span>
       </nobr><br /><nobr>
-      <span class=key style="width: 54px;">caps</span>
+      <span class=key style="width: 3.7rem;" onclick="showCapsKeys();">caps</span>
       <span class=key>a</span>
       <span class=key>s</span>
       <span class=key>d</span>
@@ -88,9 +102,9 @@
       <span class=key>l</span>
       <span class=key>[</span>
       <span class=key>]</span>
-      <span class=key style="width: 38px;">enter</span>
+      <span class=key style="width: 3.2rem;">enter</span>
       </nobr><br /><nobr>
-      <span class=key style="width: 38px;">ctrl</span>
+      <span class=key style="width: 2.5rem;">ctrl</span>
       <span class=key>&lt;</span>
       <span class=key>z</span>
       <span class=key>x</span>
@@ -102,20 +116,94 @@
       <span class=key>,</span>
       <span class=key>.</span>
       <span class=key>/</span>
-      <span class=key>?</span>
+      <span class=key>-</span>
       <span class=key>_</span>
       </nobr><br /><nobr>
-      <span class=key>o</span>
+      <span class=key>~</span>
       <span class=key>&gt;</span>
       <span class=key>(</span>
       <span class=key>)</span>
       <span class=key>@</span>
-      <span class=key style="width: 112px;">spc</span>
+      <span class=key style="width: 8.4rem;">spc</span>
       <span class=key>;</span>
       <span class=key>:</span>
+      <span class=key>*</span>
       <span class=key>'</span>
       <span class=key>"</span>
+      </nobr>
+    </div>
+    <div id=capskeys class="float movable">
+      <nobr>
+      <span class=key>\</span>
+      <span class=key>!</span>
+      <span class=key>#</span>
+      <span class=key>·</span>
+      <span class=key>$</span>
+      <span class=key>%</span>
+      <span class=key>&amp;</span>
+      <span class=key>¨</span>
+      <span class=key>(</span>
+      <span class=key>)</span>
+      <span class=key>=</span>
+      <span class=key>¿</span>
+      <span class=key>¡</span>
+      <span class=key style="width: 2.5rem;">&larr;</span>
+      </nobr><br /><nobr>
+      <span class=key style="width: 2.5rem;">tab</span>
+      <span class=key>Q</span>
+      <span class=key>W</span>
+      <span class=key>E</span>
+      <span class=key>R</span>
+      <span class=key>T</span>
+      <span class=key>Y</span>
+      <span class=key>U</span>
+      <span class=key>I</span>
+      <span class=key>O</span>
+      <span class=key>P</span>
+      <span class=key>+</span>
+      <span class=key>{</span>
+      <span class=key>}</span>
+      </nobr><br /><nobr>
+      <span class=keypress style="width: 3.7rem;" onclick="hideCapsKeys();">caps</span>
+      <span class=key>A</span>
+      <span class=key>S</span>
+      <span class=key>D</span>
+      <span class=key>F</span>
+      <span class=key>G</span>
+      <span class=key>H</span>
+      <span class=key>J</span>
+      <span class=key>K</span>
+      <span class=key>L</span>
+      <span class=key>[</span>
+      <span class=key>]</span>
+      <span class=key style="width: 3.2rem;">enter</span>
+      </nobr><br /><nobr>
+      <span class=key style="width: 2.5rem;">ctrl</span>
+      <span class=key>&lt;</span>
+      <span class=key>Z</span>
+      <span class=key>X</span>
+      <span class=key>C</span>
+      <span class=key>V</span>
+      <span class=key>B</span>
+      <span class=key>N</span>
+      <span class=key>M</span>
+      <span class=key>,</span>
+      <span class=key>.</span>
+      <span class=key>/</span>
+      <span class=key>-</span>
+      <span class=key>_</span>
+      </nobr><br /><nobr>
       <span class=key>~</span>
+      <span class=key>&gt;</span>
+      <span class=key>(</span>
+      <span class=key>)</span>
+      <span class=key>@</span>
+      <span class=key style="width: 8.4rem;">spc</span>
+      <span class=key>;</span>
+      <span class=key>:</span>
+      <span class=key>*</span>
+      <span class=key>'</span>
+      <span class=key>"</span>
       </nobr>
     </div>
     <script>
@@ -171,6 +259,22 @@ editor.setValue("\
 editor.setCursor(4,0);
 editor.focus();
 
+function showCapsKeys() {
+  var keys = document.getElementById('keyboard').style;
+  var caps = document.getElementById('capskeys').style;
+  caps.top = keys.top;
+  caps.left = keys.left;
+  keys.display = "none";
+  caps.display = "block";
+}
+function hideCapsKeys() {
+  var keys = document.getElementById('keyboard').style;
+  var caps = document.getElementById('capskeys').style;
+  keys.top = caps.top;
+  keys.left = caps.left;
+  caps.display = "none";
+  keys.display = "block";
+}
 function handleVkey(event) {
   var target = event.target || event.srcElement;
   keyPress(target.innerText);
