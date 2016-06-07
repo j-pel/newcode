@@ -7,19 +7,29 @@
       .editor {
         position: fixed;
         overflow: auto;
+        top: 0px;
+        left: 0px;
         font-family: terminal, "Lucida Console";
         font-size: 9pt;
-        width: 99%;
-        height: 98%;
+        width: 100%;
+        height: 100%;
       }
       .editor .statusbar {
         position: fixed;
         font-size: 8pt;
         height: 8pt;
-        width: 99%;
+        width: 100%;
         border-top: 1px solid #aaa;
         background-color: #ddd;
         bottom: 0rem;                
+      }
+      .editor .cursor {
+        position: fixed;
+        font-size: 8pt;
+        height: 8pt;
+        width: 2px;
+        border: 1px solid #aaa;
+        background-color: #fea;
       }
       .float {
         display: block;
@@ -247,7 +257,7 @@ function hideCapsKeys() {
 }
 function handleVkey(event) {
   var target = event.target || event.srcElement;
-  keyPress(target.innerText);
+  keyPress(target.innerHTML);
 }
 
 function handleKeyDown(event){
@@ -294,9 +304,20 @@ function keyPress(key) {
     editor.replaceRange("\u00A0",cur);
     break;
   case "ArrowUp":
+    var cur = editor.getCursor();
+    editor.setCursor(cur[0]-1,cur[1]);
+    break;
   case "ArrowDown":
+    var cur = editor.getCursor();
+    editor.setCursor(cur[0]+1,cur[1]);
+    break;
   case "ArrowLeft":
+    var cur = editor.getCursor();
+    editor.setCursor(cur[0],cur[1]-1);
+    break;
   case "ArrowRight":
+    var cur = editor.getCursor();
+    editor.setCursor(cur[0],cur[1]+1);
     break;
   case "PageUp":
   case "PageDown":
