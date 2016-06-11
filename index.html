@@ -26,10 +26,13 @@
       .editor .cursor {
         position: fixed;
         font-size: 8pt;
-        height: 8pt;
+        height: 12pt;
         width: 1px;
         /*border: 1px solid #aaa;*/
         background-color: #555;
+      }
+      .editor .multiline-comment {
+        color: #caf;
       }
       .float {
         display: block;
@@ -235,6 +238,8 @@ editor.setValue("\
 * whose main goal is to ease coding on touch devices.\n\
 * To show available commands, press ctrl-spc\n\
 *                                                          */\n\
+editor.setCursor(4,0);  /* easy cursor */\n\
+editor.focus();\n\
 ");
 editor.setCursor(4,0);
 editor.focus();

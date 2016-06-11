@@ -5,6 +5,8 @@
   var canvas = new Object();
   var sb = new Object();
   var cursor = new Object();
+  
+  var lines = [];
   var cw = 7;
   var ch = 0;
   var head = [0,0];
@@ -25,7 +27,8 @@
     obj.appendChild(cursor);
   }
   var setValue = exports.setValue = function(str) {
-    canvas.innerText = str;
+    lines = str.split("\n");
+    paint();
   }
   var getCursor = exports.getCursor = function() {
     return head;
@@ -39,6 +42,10 @@
     cursor.style.left = canvas.style.left + (char*cw+1)+"px";
   }
   var replaceRange = exports.replaceRange = function(str, cur) {
+    var newLines = str.split("\n");
+    newLines.forEach(function(item){
+      lines[head[0]]=item;
+    });
     canvas.innerHTML += str;
     var line = 0;
     var char = parseInt(str.length);
@@ -63,4 +70,65 @@
   var focus = exports.focus = function() {
     //canvas.focus();
   }
+  function paint(){
+    canvas.innerHTML = "";
+    
+    for (var l = 0;l<lines.length;l++) {
+      var item = lines[l];
+      var i = item.indexOf("/*");
+      console.log(item);
+      if (i<0) {
+        canvas.appendChild(document.createTextNode(item));
+        canvas.appendChild(document.createElement("br"));
+      } else {
+        while (l<lines.length) {
+          var i = item.indexOf("/*");
+          var j = item.indexOf("*/");
+          if (j<0) {
+            if (i>0) {
+              var comment = item.split("/*");
+              console.log(comment);
+              canvas.appendChild(document.createTextNode(comment[0]));
+              var span = canvas.appendChild(document.createElement("span"));
+              span.className = "multiline-comment";
+              span.appendChild(document.createTextNode("/*"+comment[1]));
+              canvas.appendChild(span);
+              canvas.appendChild(document.createElement("br"));
+              i = 0;
+            } else {
+              var span = canvas.appendChild(document.createElement("span"));
+              span.className = "multiline-comment";
+              span.appendChild(document.createTextNode(item));
+              canvas.appendChild(span);
+              canvas.appendChild(document.createElement("br"));
+            }
+          } else {
+            if (i>0) {
+              var comment = item.split("/*");
+              console.log(comment);
+              canvas.appendChild(document.createTextNode(comment[0]));
+              var span = canvas.appendChild(document.createElement("span"));
+              span.className = "multiline-comment";
+              span.appendChild(document.createTextNode("/*"+comment[1]));
+              canvas.appendChild(span);
+              canvas.appendChild(document.createElement("br"));
+              i = 0;
+            } else {
+              var comment = item.split("*/");
+              var span = canvas.appendChild(document.createElement("span"));
+              span.className = "multiline-comment";
+              span.appendChild(document.createTextNode(comment[0]+"*/"));
+              canvas.appendChild(span);
+              canvas.appendChild(document.createTextNode(comment[1]));
+              canvas.appendChild(document.createElement("br"));
+            }
+            break;
+          }
+          l++;
+          var item = lines[l];
+        }
+      }
+    }
+  }
+
 })(typeof exports === 'undefined'? this['editor']={}: exports);
