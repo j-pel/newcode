@@ -5,6 +5,8 @@
   var canvas = new Object();
   var sb = new Object();
   var cursor = new Object();
+  var cw = 7;
+  var ch = 0;
   var head = [0,0];
   var tail = [0,0];
 
@@ -13,6 +15,8 @@
     canvas.style.border = "1px solid black"
     canvas.style.margin = "0px"
     obj.appendChild(canvas);
+    canvas.innerText = "newcode";
+    ch = canvas.offsetHeight-1;
     sb = document.createElement('div');
     sb.className = 'statusbar';
     obj.appendChild(sb);
@@ -31,8 +35,6 @@
     char = (char>0)?char:0;
     head = [line,char];
     sb.innerText = "Line "+ line +", Column "+ char;
-    var cw = 6;
-    var ch = 18;
     cursor.style.top = canvas.style.top + line*ch + "px";
     cursor.style.left = canvas.style.left + (char*cw+1)+"px";
   }
